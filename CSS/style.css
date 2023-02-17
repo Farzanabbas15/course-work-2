@@ -1,92 +1,42 @@
 .header {
   text-align: center;
+  background-color: #0059ff;
   color: #ffffff;
   font-size: 20px;
   margin: 0%;
-  padding-top: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 20px 30px;
-  align-items: center;
+  overflow: hidden;
 }
 
 .header2 {
   text-align: center;
+  background-color: #0059ff;
   color: #ffffff;
   font-size: 20px;
   margin: 0%;
+  overflow: hidden;
 }
 
-.hero-heading {
-  font-size: 4rem;
-  font-weight: bold;
-  color: #fff;
-}
-
-.hero-section {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-  /* flex-wrap: wrap; */
-  justify-content: center;
-  align-items: center;
-  background-image: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../img/hero.jpeg');
-  border-radius: 14px !important;
-  background-position: center;
-  background-size: cover;
-}
-
-.header-link {
+.header a {
   float: right;
-  color: black;
+  color: #f2f2f2;
   text-align: center;
   padding: 20px 20px;
   text-decoration: none;
   font-size: 17px;
 }
 
-.header-link:hover {
-  background-color: black;
-  color: white;
+.header a:hover {
+  background-color: #ddd;
+  color: black;
 }
 
 .header a.active {
   background-color: #04AA6D;
-  color: white;
-}
-
-.chkOut-btn {
-  color: #ffffff;
-  background-color: #000000 !important;
-}
-
-.chkOut-btn:hover {
-  color: #ffffff;
-  background-color: #B300FF !important;
-}
-
-.chkOut-btn:active {
-  color: #ffffff;
-  background-color: #4e115a !important;
-}
-
-
-.swal2-confirm {
-  color: #ffffff;
-  background-color: #000000 !important;
-}
-.swal2-confirm:hover {
-  color: #ffffff;
-  background-color: #B300FF !important;
-}
-.swal2-confirm:active {
-  color: #ffffff;
-  background-color: #4e115a !important;
+  color: rgb(255, 11, 11);
 }
 
 .lesson-box {
-  width: 100%;
+  width: 4%;
   border: 1px solid;
   padding: 1pc;
   margin-top: 1pc;
@@ -98,9 +48,9 @@
 
 .lesssonbox {
   padding: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 5px;
 }
 
 button[disabled] {
@@ -127,7 +77,6 @@ button[disabled] {
 body {
   font-family: Arial;
   font-size: 17px;
-  background: #f2f2f2;
 }
 
 * {
@@ -164,9 +113,9 @@ body {
 
 .container {
   margin-top: 20px;
-  background-color: #f2f2f2;
+  background-color: #8be9f4;
   padding: 5px 20px 15px 20px;
-  border: 1px solid lightgrey;
+  border: 1px solid rgb(243, 4, 4);
   border-radius: 3px;
 }
 
@@ -178,7 +127,31 @@ body {
   content: "\25BC"
 }
 
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid rgb(157, 20, 20);
+  border-radius: 3px;
+}
+
 input[type=number] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+input[type=select] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+select {
   width: 100%;
   margin-bottom: 20px;
   padding: 12px;
@@ -267,86 +240,4 @@ span.price {
   height: 300px;
   margin-bottom: 15px;
   float: right;
-}
-
-.hero-container {
-  width: 100%;
-  height: 80vh;
-  padding: 0 50px;
-  margin-top: 50px;
-}
-
-.widget-container {
-  width: 50%;
-  display:flex;
-  flex-direction: column;
-  background-color: #fff;
-  padding: 20px;
-  margin-top: 30px;
-  border-radius: 14px !important;
-}
-
-.search-widget {
-  margin-right: 20px;
-  border-radius: 14px !important;
-}
-
-.input-container {
-  display: flex;
-  flex-direction: row;
-}
-
-.form-select {
-  display: flex;
-  flex-wrap: wrap;
-  background:  #B300FF;
-  padding: 10px;
-  color: white;
-  outline: none;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 14 !important;
-  cursor: pointer;
-}
-
-.form-select:hover {
-  background:  #a68dff;
-}
-
-.search-widget {
-  flex: 1;
-  padding: 0 30px;
-  border: 1px solid #ccc !important;
-}
-
-.search-widget:focus {
-  box-shadow: 0 0 5px 2px #000000;
-	border: 2px solid #a68dff !important;
-}
-
-.sort-container {
-  margin-top: 10px;
-  display:flex;
-  gap: 10px;
-}
-
-.bg-dark:hover {
-  background-color: #4e115a !important;
-}
-
-.bg-dark:active {
-  background-color: #B300FF !important;
-}
-
-.subheading {
-  color: lightgrey;
-  font-weight: semibold;
-}
-
-.logo {
-  width: 150px;
-}
-
-.logo img {
-  width: 100%;
 }

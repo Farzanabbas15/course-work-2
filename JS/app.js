@@ -1,131 +1,131 @@
-const { ObjectID } = require("bson");
-const express = require("express");
-const app = express();
+const express = require('express')
+const app = express()
+var cors = require('cors')
+const path = require('path');
+var fs = require('fs');
 
-const path = require('path')
-const fs = require('fs');
 
-const donenv = require("dotenv").config();
+app.use(cors())
+app.use(express.json())
 
-app.use(express.json());
 
-port = process.env.PORT || 3000;
-
-app.use((req, res, next) => {
-    
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-    if (req.method === "OPTIONS") {
-        res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-        );
-        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH");
-        return res.status(200).json({});
-    }
+app.use((req,res,next) =>{
+    res.setHeader('Access-Control-Allow-Origin', '*');
     next();
-    });
+})
 
-app.use((req, res, next) => {
-    console.log("Request Made => " + `${req.method} ${req.url}`);
+// Logger
+app.use(function(request, response, next) {
+    console.log("In comes a " + request.method + " to: " + request.url);
     next();
 });
+app.use((express.static("public")));
 
-// connect to MongoDB
 
-const MongoClient = require("mongodb").MongoClient;
-
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectId;
 
 let db;
 
-MongoClient.connect(process.env.CONNECTION_URL, (err, client) => {
-    db = client.db("webstore");}
-);
+MongoClient.connect('mongodb+srv://farzan:farzan123@cluster0.ce5adtb.mongodb.net/test',(err, client)=> {
+    db = client.db('webstore')
+})
 
-app.get("/", (req, res, next) => {
-    res.send("Select a collection, e.g., /collection/messages");
-});
 
-app.param("collectionName", (req, res, next, collectionName) => {
-    req.collection = db.collection(collectionName);
-    return next();
-});
+app.get('/', (req,res,next) => {
+    res.send('Select a collection, e.g, /collection/messages')
+})
 
-app.get("/collection/:collectionName", (req, res, next) => {
-    req.collection.find({}).toArray((e, results) => {
-        if (e) return next(e);
-        res.send(results);
-    });
-});
+app.param('collectionName', (req,res,next,collectionName) =>{
+    req.collection = db.collection(collectionName)
+    return next()
+})
 
-//collection Insert is deprecated
+// Get collection
+app.get('/collection/:collectionName', (req,res,next) => {
+    req.collection.find({}).toArray((e,results) => {
+        if(e) return next(e)
+        res.send(results)
+    })
+})
 
-app.post("/collection/:collectionName", (req, res, next) => {
-    req.collection.insertOne(req.body, (e, results) => {
-        if (e) return next(e);
-        res.send(results.ops);
-    });
-});
+// Add object
+app.post('/collection/:collectionName', (req,res,next) => {
+    req.collection.insertOne(req.body, (e,results) => {
+        if(e) return next(e)
+        res.send(results.ops)
+    })
+})
 
-app.get("/collection/:collectionName/:search", (req, res, next) => {
-    var search = req.params.search;
-    req.collection.find({"subject": {"$regex": search, "$options": "i"}}).toArray((e, results) => {
-        if (e) return next(e);
-        res.send(results);
-    });
-});
+// Get Object
+app.get('/collection/:collectionName/:id', (req,res,next)=>{
+    req.collection.findOne({_id: new ObjectID(req.params.id)}, (e,results) => {
+        if (e) return next(e)
+        res.send(results)
+    })
+})
 
-app.use('/static', function (req, res, next) {
-    // Uses path.join to find the path where the file should be
-    var filePath = path.join(__dirname, 'static', "English.jpg");
-    // Built-in fs.stat gets info about a file
-    fs.stat(filePath, function (err, fileInfo) {
+// Update Object
+app.put('/collection/:collectionName/:id', (req,res,next)=>{
+    req.collection.updateOne(
+        {_id: new ObjectID(req.params.id)},
+        {$set: req.body},
+        {safe: true, multi: false},
+        (e,results) => {
+        if (e) return next(e)
+        res.send(results ? {msg: 'sucess'} : {msg: 'error'})
+    })
+})
+
+
+// Delete object
+app.delete('/collection/:collectionName/:id', (req,res,next)=>{
+    req.collection.deleteOne(
+        {_id: new ObjectID(req.params.id)},
+        (e,results) => {
+        if (e) return next(e)
+        res.send(results ? {msg: 'sucess'} : {msg: 'error'})
+    })
+})
+
+// Search object
+app.get('/collection/:collectionName/:search', (req, res,next) => {
+    let {search} = req.params
+    req.collection.find({}).toArray((err, results) => {
+        if (err) return next(err)
+        let filteredList = results.filter((lesson) => {
+            return lesson.Subject.toLowerCase().match(keyword.toLowerCase()) || lesson.Location.toLowerCase().match(keyword.toLowerCase())
+        });  
+        res.send(filteredList)
+    })
+})
+  
+  
+
+// File middleware
+app.use(function(req,res,next) {
+    var filePath = path.join(__dirname, "images", req.url);
+    fs.stat(filePath, function(err, fileInfo) {
         if (err) {
             next();
             return;
         }
-        if (fileInfo.isFile()) res.sendFile(filePath);
-        else next();
-    })
-})
-
-app.get('/collection/:collectionName/:sortby/:order',(req,res,next)=> {
-    console.log("incomming request for sorted data :{ " + req.params.sortby + " , " + req.params.order + " }");
-    req.collection.find({},{sort:[[req.params.sortby , parseInt(req.params.order)]]})
-    .toArray((e, results)=>
-    {
-        if(e) return next(e);
-        res.send(results);
-    })
-})
-
-app.use('/images',express.static(path.join(__dirname,'../img')));
-app.use((req,res, next) => {
-    res.status(404).send('Image not found.');
-});
-
-app.get("/collection/:collectionName/:id", (req, res, next) => {
-    req.collection.findOne({ _id: new ObjectID(req.params.id) }, (e, result) => {
-        if (e) return next(e);
-        res.send(result);
+        if (fileInfo.isFile()) {
+            res.sendFile(filePath);
+        }
+        else {
+            next();
+        }
     });
 });
 
-app.put("/collection/:collectionName/:id", (req, res, next) => {
-    req.collection.updateOne(
-        { _id: new ObjectID(req.params.id) },
-        { $set: req.body },
-        { safe: true, multi: false },
-        (e, result) => {
-            if (e) return next(e);
-            res.send(result);
-        }
-    );
+app.use(function(req,res, next) {
+    res.status(404);
+    res.send("File not found");
 });
 
-app.listen(port, () => {
-    console.log(`API running on port ${port}`);
+
+const port = process.env.PORT || 3000;
+app.listen(port, function() {
+console.log("App started on port: " + port);
 });

@@ -170,7 +170,6 @@ const app = new Vue({
             return response.text();
           })
           .then((data) => {
-            // turn response text to json
             // resolve(data ? JSON.parse(data) : {})
             console.log("Success:", data);
             console.log(this.finalorder);
@@ -218,44 +217,6 @@ const app = new Vue({
           "question"
         );
       }
-    },
-
-    sortProducts() {
-      let url = '';
-      if (this.sortByOptions.type == "price") {
-        if (this.sortByOptions.direction == "asc") {
-          url = "http://localhost:3000/collection/products/price/1";
-        } else if (this.sortByOptions.direction == "desc") {
-          url = "http://localhost:3000/collection/products/price/-1";
-        }
-      } else if (this.sortByOptions.type == "subject") {
-        if (this.sortByOptions.direction == "asc") {
-          url = "http://localhost:3000/collection/products/subject/1";
-        } else if (this.sortByOptions.direction == "desc") {
-          url = "http://localhost:3000/collection/products/subject/-1";
-        }
-      } else if (this.sortByOptions.type == "location") {
-        if (this.sortByOptions.direction == "asc") {
-          url = "http://localhost:3000/collection/products/location/1";
-        } else if (this.sortByOptions.direction == "desc") {
-          url = "http://localhost:3000/collection/products/location/-1";
-        }
-      } else if (this.sortByOptions.type == "space") {
-        if (this.sortByOptions.direction == "asc") {
-          url = "http://localhost:3000/collection/products/space/1";
-        } else if (this.sortByOptions.direction == "desc") {
-          url = "http://localhost:3000/collection/products/space/-1";
-        }
-      }
-
-      fetch(url)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          this.products = data;
-        });
-      
     },
   },
   computed: {
